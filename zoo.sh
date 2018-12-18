@@ -1,4 +1,4 @@
-sudo yum install java-1.8.0-openjdk
+sudo yum install java-1.8.0-openjdk telnet -y
 sudo groupadd zookeeper
 sudo useradd -g zookeeper -d /opt/zookeeper -s /sbin/nologin zookeeper
 sudo cd /opt
