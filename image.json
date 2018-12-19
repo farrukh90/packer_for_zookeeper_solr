@@ -1,36 +1,52 @@
 {
-  "variables": {
-    "aws_access_key":                        
-    "aws_secret_key":                                            
-  },
+  "variables": {},
   "builders": [{
     "type": "amazon-ebs",
-    "access_key": "{{user `aws_access_key`}}",
-    "secret_key": "{{user `aws_secret_key`}}",
     "region": "eu-west-1",
-    "source_ami": "ami-0e12cbde3e77cbb98",
+    "source_ami": "ami-09693313102a30b2c",
     "instance_type": "t2.micro",
     "ssh_username": "ec2-user",
     "ami_name": "zoo-{{timestamp}}"
     }],
     "provisioners": [
-        {
+         {
          "type": "file", 
-         "source": "zookeeper.service",
-         "destination": "/tmp/zookeeper.service"
+         "source": "zoo.cfg",
+         "destination": "/tmp/"
         },
         {
-	"type": "shell",
-        "inline": [
-	"sudo cp /tmp/zookeeper.service /etc/systemd/system"]
-	},
+	 "type": "shell",
+	 "inline": [
+            "sudo yum install wget java-1.8.0-openjdk telnet -y",
+            "sudo groupadd zookeeper",
+            "sudo wget http://apache.spinellicreations.com/zookeeper/zookeeper-3.4.13/zookeeper-3.4.13.tar.gz -P /tmp/", 
+            "sudo tar xzvf /tmp/zookeeper-3.4.13.tar.gz --directory /opt/",
+            "sudo useradd -g zookeeper -d /opt/zookeeper-3.4.13 -s /sbin/nologin zookeeper"
+          ]
+        },
+         {
+         "type": "file", 
+         "source": "zookeeper.service",
+         "destination": "/tmp/"
+        },
         {
-       "type": "shell",
-       "script": "zoo.sh"
-       },
+	 "type": "shell",
+	 "inline": ["sudo mv /tmp/zookeeper.service /etc/systemd/system/"]
+        },
        {
        "type": "shell",
        "script": "solr.sh"
-       }
+       },
+       {
+        "type": "shell",
+        "inline": [
+            "sudo mkdir /opt/zookeeper-3.4.13/data",
+            "sudo chown -R zookeeper:zookeeper /opt/zookeeper-3.4.13/*",
+            "sudo mv /tmp/zoo.cfg /opt/zookeeper-3.4.13/conf/",
+            "sudo systemctl daemon-reload",
+            "sudo systemctl enable zookeeper.service",
+            "sudo systemctl start zookeeper.service"
+]
+        }
   ]
 }
