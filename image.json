@@ -41,7 +41,7 @@
         "type": "shell",
         "inline": [
             "sudo mkdir /opt/zookeeper-3.4.13/data",
-            "sudo chown -R zookeeper:zookeeper /opt/zookeeper-3.4.13/*",
+            "sudo chown -R zookeeper:zookeeper /opt/",
             "sudo mv /tmp/zoo.cfg /opt/zookeeper-3.4.13/conf/",
             "sudo systemctl daemon-reload",
             "sudo systemctl enable zookeeper.service",
