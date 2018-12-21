@@ -14,6 +14,11 @@
          "source": "zoo.cfg",
          "destination": "/tmp/"
         },
+         {
+         "type": "file", 
+         "source": "zookeeper-env.sh",
+         "destination": "/tmp/"
+        },
         {
 	 "type": "shell",
 	 "inline": [
@@ -41,8 +46,9 @@
         "type": "shell",
         "inline": [
             "sudo mkdir /opt/zookeeper-3.4.13/data",
-            "sudo chown -R zookeeper:zookeeper /opt/",
             "sudo mv /tmp/zoo.cfg /opt/zookeeper-3.4.13/conf/",
+            "sudo mv /tmp/zookeeper-env.sh /opt/zookeeper-3.4.13/conf/",
+            "sudo chown -R zookeeper:zookeeper /opt/",
             "sudo systemctl daemon-reload",
             "sudo systemctl enable zookeeper.service",
             "sudo systemctl start zookeeper.service"
